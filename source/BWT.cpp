@@ -1,6 +1,22 @@
-#include <decompression.h>
+#include <BWT.h>
 
-string bwt_inverse(const size_t& k, const string& last) {
+pair<string, size_t> BWT_encode(const string& input) {
+    vector<string> cyclic_shifts; // memory: O(N)
+    for (size_t i = 0; i < input.size(); ++i) { // time: O(N)
+        string next = string(input, i, input.size() - i) + string(input, 0, i);
+        cyclic_shifts.push_back(next);
+    }
+    std::sort(cyclic_shifts.begin(), cyclic_shifts.end()); // time: O(N*logN)
+    auto iter = std::find(cyclic_shifts.begin(), cyclic_shifts.end(), input); // time: O(N)
+    size_t index = iter - cyclic_shifts.begin();
+    string compressed;
+    for (size_t i = 0; i < input.size(); ++i) { // time: O(N)
+        compressed += cyclic_shifts[i][input.size() - 1];
+    }
+    return {compressed, index};
+}
+
+string BWT_decode(const size_t& k, const string& last) {
     // get first column in matrix of cyclic shifts
     vector<char> first; // memory: O(N)
     for (const auto& ch : last) { // time: O(N)
@@ -34,7 +50,7 @@ string bwt_inverse(const size_t& k, const string& last) {
     return answer;
 }
 
-string bwt_inverse_optimized(const size_t& k, const string& s) {
+string BWT_decode_optimized(const size_t& k, const string& s) {
     vector<size_t> count(256, 0);
     for (char c : s) {
         count[static_cast<size_t>(c)]++;

@@ -2,15 +2,16 @@ cmake_minimum_required(VERSION 3.14)
 project(my_project)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS "-g -O0 -Wall")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
 
 # libraries
 add_library(common_files STATIC
 		${CMAKE_CURRENT_SOURCE_DIR}/source/functions.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/source/compression.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/source/decompression.cpp)
+		${CMAKE_CURRENT_SOURCE_DIR}/source/BWT.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/source/LZW.cpp
+		)
 target_include_directories(common_files PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/include)
 
