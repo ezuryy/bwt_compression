@@ -1,7 +1,7 @@
 #include "BWT.h"
 
 pair<string, size_t> BWT_encode(const string& input) {
-    vector<string> cyclic_shifts;                // memory: O(N)
+    vector<string> cyclic_shifts;                // memory: O(N ^ 2)
     for (size_t i = 0; i < input.size(); ++i) {  // time: O(N)
         string next = string(input, i, input.size() - i) + string(input, 0, i);
         cyclic_shifts.push_back(next);
