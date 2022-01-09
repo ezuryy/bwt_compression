@@ -2,9 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 project(my_project)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-g -O0 -Wall")
-set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
-string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage -Werror -Wpedantic")
+set(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 
 # libraries
 add_library(common_files STATIC
