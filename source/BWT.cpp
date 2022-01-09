@@ -1,6 +1,4 @@
-#include <BWT.h>
-
-typedef unsigned char uchar;
+#include "BWT.h"
 
 pair<string, size_t> BWT_encode(const string& input) {
     vector<string> cyclic_shifts;                // memory: O(N)

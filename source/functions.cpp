@@ -15,7 +15,7 @@ int rack;
 // Код первой добавляемой в словарь фразы после записи символов алфавита
 #define FIRST_CODE 257
 
-void show_options() {
+void ShowOptions() {
     std::cout
         << "To compress enter:\n./main -c path/to/input.txt "
            "path/to/output.txt\n"
@@ -90,7 +90,7 @@ size_t ReadBits(int bit_count) {
     return return_value;
 }
 
-size_t filesize(const string& filename) {
+size_t Filesize(const string& filename) {
     std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
     return in.tellg();
 }
@@ -100,8 +100,8 @@ size_t CompressionRatio(const string& input_filename,
     size_t input_size;
     size_t output_size;
 
-    input_size = filesize(input_filename);
-    output_size = filesize(output_filename);
+    input_size = Filesize(input_filename);
+    output_size = Filesize(output_filename);
     if (output_size == 0) output_size = 1;
     size_t ratio = input_size * 100 / output_size;
     std::cout << "Input size : \t\t" << input_size << " bytes\n";

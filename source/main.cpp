@@ -22,10 +22,10 @@ int main(int argc, char *argv[]) {
                       << " into file " << output_filename << " is completed.\n";
 
         } else {
-            show_options();
+            ShowOptions();
         }
     } else {
-        show_options();
+        ShowOptions();
     }
     return 0;
 }

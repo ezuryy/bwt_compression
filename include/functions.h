@@ -18,7 +18,7 @@ using std::vector;
 
 typedef unsigned char uchar;
 
-void show_options();
+void ShowOptions();
 
 void OpenOutputBFile(const string& name);
 
@@ -32,7 +32,7 @@ void WriteBits(size_t code, int count);
 
 size_t ReadBits(int bit_count);
 
-size_t filesize(const string& filename);
+size_t Filesize(const string& filename);
 
 size_t CompressionRatio(const string& input_filename,
                         const string& output_filename);
