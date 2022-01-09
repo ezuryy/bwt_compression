@@ -52,27 +52,3 @@ string BWT_decode(const size_t& k, const string& last) {
     std::reverse(answer.begin(), answer.end());  // time: O(N/2)
     return answer;
 }
-
-string BWT_decode_optimized(const size_t& k, const string& s) {
-    vector<size_t> count(256, 0);
-    for (uchar c : s) {
-        count[static_cast<size_t>(c)]++;
-    }
-    size_t sum = 0;
-    for (size_t i = 0; i < 256; ++i) {
-        sum = sum + count[i];
-        count[i] = sum - count[i];
-    }
-    vector<size_t> reverse_conversion(256, 0);
-    for (size_t i = 0; i < s.size(); ++i) {
-        reverse_conversion[count[s[i]]] = i;
-        count[static_cast<size_t>(s[i])]++;
-    }
-    string answer;
-    size_t j = reverse_conversion[k];
-    for (size_t i = 0; i < s.size(); ++i) {
-        answer += s[j];
-        j = reverse_conversion[j];
-    }
-    return answer;
-}
