@@ -32,7 +32,7 @@ TEST(Test1, textAboutInternetAndMind) {
     EXPECT_EQ(test_input, decompressed_input);
 
     size_t ratio = CompressionRatio(test_filename, compressed_filename);
-    EXPECT_TRUE(ratio >= 150);
+    EXPECT_TRUE(ratio >= 160);
 }
 
 TEST(Test2, textAboutBostonAndAmason) {
@@ -98,5 +98,5 @@ TEST(Test3, textAboutLZW) {
     EXPECT_EQ(test_input, decompressed_input);
 
     size_t ratio = CompressionRatio(test_filename, compressed_filename);
-    EXPECT_TRUE(ratio >= 130);
+    EXPECT_TRUE(ratio >= 145);
 }
