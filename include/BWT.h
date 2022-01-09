@@ -1,7 +1,11 @@
 #pragma once
 
 #include <functions.h>
+
 #include <unordered_map>
+
+using std::pair;
+using std::string;
 
 pair<string, size_t> BWT_encode(const string& input);
 
