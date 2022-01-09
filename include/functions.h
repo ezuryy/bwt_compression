@@ -37,8 +37,8 @@ size_t filesize(const string& filename);
 size_t CompressionRatio(const string& input_filename,
                         const string& output_filename);
 
-void CompressFile(std::ifstream& input);
+void CompressFile(const std::string& input_filename, const std::string& output_filename);
 
-void ExpandFile(std::ofstream& output);
+void ExpandFile(const std::string& input_filename, const std::string& output_filename);
 
 #endif  // MY_PROJECT_FUNCTIONS_H

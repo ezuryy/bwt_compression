@@ -110,7 +110,14 @@ size_t CompressionRatio(const string& input_filename,
     return ratio;
 }
 
-void CompressFile(std::ifstream& input) {
+void CompressFile(const std::string& input_filename, const std::string& output_filename) {
+    std::ifstream input(input_filename, std::ios::in);
+    if (!input.is_open()) {
+        throw std::invalid_argument("can't open file " +
+                                    input_filename);
+    }
+    OpenOutputBFile(output_filename);
+
     char symbol;
     std::string full_input;
     while (input.get(symbol)) {
@@ -125,9 +132,19 @@ void CompressFile(std::ifstream& input) {
         WriteBits(code, BITS);
     }
     WriteBits(ALPHABET_SIZE, BITS);
+
+    CloseOutputBFile();
+    input.close();
 }
 
-void ExpandFile(std::ofstream& output) {
+void ExpandFile(const std::string& input_filename, const std::string& output_filename) {
+    std::ofstream output(output_filename, std::ios::out);
+    if (!output.is_open()) {
+        throw std::invalid_argument("can't open file " +
+                                    output_filename);
+    }
+    OpenInputBFile(input_filename);
+
     string bwt_coefficient_str;
     int symbol = bfile_in.get();
     while (symbol != int(' ')) {
@@ -149,4 +166,7 @@ void ExpandFile(std::ofstream& output) {
     string original_text = BWT_decode(bwt_coefficient, bwt_text);
 
     output << original_text;
+
+    CloseInputBFile();
+    output.close();
 }
