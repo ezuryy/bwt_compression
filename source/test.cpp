@@ -34,6 +34,34 @@ void CompressDecompressTest(const string& test_filename, const string& compresse
     EXPECT_TRUE(ratio >= expected_ratio);
 }
 
+void CompressDecompressExpectError(const string& test_filename, const string& compressed_filename,
+                            const string& decompressed_filename) {
+    CompressFile(test_filename, compressed_filename);
+    ExpandFile(compressed_filename, decompressed_filename);
+
+    std::ifstream test_f(test_filename, std::ios::in);
+    if (!test_f.is_open()) {
+        throw std::invalid_argument("can't open file " + test_filename);
+    }
+    std::string line, test_input;
+    while (std::getline(test_f, line)) {
+        test_input += (line + '\n');
+        line.clear();
+    }
+    test_f.close();
+
+    std::ifstream decompressed_f(decompressed_filename, std::ios::in);
+    if (!decompressed_f.is_open()) {
+        throw std::invalid_argument("can't open file " + decompressed_filename);
+    }
+    std::string decompressed_input;
+    while (std::getline(decompressed_f, line)) {
+        decompressed_input += (line + '\n');
+    }
+    decompressed_f.close();
+    EXPECT_FALSE(test_input == decompressed_input);
+}
+
 TEST(Test1, textAboutInternetAndMind) {
     string test_filename = "../tests/text001.txt";
     string compressed_filename = "../tests/compressed001.txt";
@@ -89,4 +117,20 @@ TEST(Test6, ASCIItable) {
     test_f.close();
 
     CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 50);
+}
+
+TEST(Test7, bmp) {
+    string test_filename = "../tests/file007.bmp";
+    string compressed_filename = "../tests/compressed007.txt";
+    string decompressed_filename = "../tests/decompressed007.bmp";
+
+    CompressDecompressExpectError(test_filename, compressed_filename, decompressed_filename);
+}
+
+TEST(Test8, jpg) {
+    string test_filename = "../tests/file008.jpg";
+    string compressed_filename = "../tests/compressed008.txt";
+    string decompressed_filename = "../tests/decompressed008.jpg";
+
+    CompressDecompressExpectError(test_filename, compressed_filename, decompressed_filename);
 }
