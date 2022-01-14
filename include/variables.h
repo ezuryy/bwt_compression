@@ -16,6 +16,8 @@ using std::pair;
 using std::string;
 using std::unordered_map;
 using std::vector;
+using std::ifstream;
+using std::ofstream;
 
 typedef unsigned char uchar;
 

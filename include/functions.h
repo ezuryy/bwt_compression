@@ -5,22 +5,23 @@
 #include "BWT.h"
 #include "LZW.h"
 #include "SuffixTree.h"
+#include "InputOutout.h"
 
-void ShowOptions();
+//void ShowOptions();
+//
+//void OpenOutputBFile(const string& name);
+//
+//void OpenInputBFile(const string& name);
+//
+//void CloseOutputBFile();
+//
+//void CloseInputBFile();
+//
+//void WriteBits(size_t code, int count);
+//
+//size_t ReadBits(int bit_count);
 
-void OpenOutputBFile(const string& name);
-
-void OpenInputBFile(const string& name);
-
-void CloseOutputBFile();
-
-void CloseInputBFile();
-
-void WriteBits(size_t code, int count);
-
-size_t ReadBits(int bit_count);
-
-size_t Filesize(const string& filename);
+//size_t Filesize(const string& filename);
 
 size_t CompressionRatio(const string& input_filename,
                         const string& output_filename);

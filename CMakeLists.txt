@@ -11,6 +11,7 @@ add_library(common_files STATIC
 		${CMAKE_CURRENT_SOURCE_DIR}/source/BWT.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/source/LZW.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/source/SuffixTree.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/source/InputOutput.cpp
 		)
 target_include_directories(common_files PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/include)

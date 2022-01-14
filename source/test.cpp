@@ -127,10 +127,10 @@ TEST(Test7, bmp) {
     CompressDecompressExpectError(test_filename, compressed_filename, decompressed_filename);
 }
 
-TEST(Test8, jpg) {
-    string test_filename = "../tests/file008.jpg";
-    string compressed_filename = "../tests/compressed008.txt";
-    string decompressed_filename = "../tests/decompressed008.jpg";
-
-    CompressDecompressExpectError(test_filename, compressed_filename, decompressed_filename);
-}
+//TEST(Test8, jpg) {
+//    string test_filename = "../tests/file008.jpg";
+//    string compressed_filename = "../tests/compressed008.txt";
+//    string decompressed_filename = "../tests/decompressed008.jpg";
+//
+//    CompressDecompressExpectError(test_filename, compressed_filename, decompressed_filename);
+//}
