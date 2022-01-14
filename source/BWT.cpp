@@ -50,5 +50,5 @@ string BWT_decode(const size_t& k, const string& last) {
         current_index = T[current_index];
     }
     std::reverse(answer.begin(), answer.end());  // time: O(N/2)
-    return answer;
+    return {answer.begin() + 1, answer.end()};
 }

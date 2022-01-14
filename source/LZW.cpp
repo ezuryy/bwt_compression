@@ -1,15 +1,7 @@
+#include "variables.h"
 #include "LZW.h"
 
-// Количество битов в коде
-#define BITS 12
-// Максимальное значение кода
-#define MAX_CODE ((1 << BITS) - 1)
-// Размер алфавита
-#define ALPHABET_SIZE 256
-// Код первой добавляемой в словарь фразы после записи символов алфавита
-#define FIRST_CODE 257
-
-vector<size_t> LZW_encode(const std::string& input) {
+vector<size_t> LZW_encode(const vector<uchar>& input) {
     unordered_map<string, size_t> dictionary;
     vector<size_t> output;
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(my_project)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage -Werror -Wpedantic")
+set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage -Wall -Werror -Wpedantic")
 set(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 
 # libraries
@@ -10,6 +10,7 @@ add_library(common_files STATIC
 		${CMAKE_CURRENT_SOURCE_DIR}/source/functions.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/source/BWT.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/source/LZW.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/source/SuffixTree.cpp
 		)
 target_include_directories(common_files PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -1,16 +1,7 @@
 #ifndef MY_PROJECT_BWT_H
 #define MY_PROJECT_BWT_H
 
-#include <algorithm>
-#include <unordered_map>
-#include <string>
-#include <vector>
-
-using std::pair;
-using std::string;
-using std::vector;
-
-typedef unsigned char uchar;
+#include "variables.h"
 
 pair<string, size_t> BWT_encode(const string& input);
 

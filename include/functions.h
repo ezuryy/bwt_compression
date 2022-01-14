@@ -1,22 +1,10 @@
 #ifndef MY_PROJECT_FUNCTIONS_H
 #define MY_PROJECT_FUNCTIONS_H
 
-#include <forward_list>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <unordered_map>
-#include <vector>
-
+#include "variables.h"
 #include "BWT.h"
 #include "LZW.h"
-
-using std::pair;
-using std::string;
-using std::unordered_map;
-using std::vector;
-
-typedef unsigned char uchar;
+#include "SuffixTree.h"
 
 void ShowOptions();
 

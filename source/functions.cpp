@@ -6,15 +6,6 @@ std::ofstream bfile_out;
 uchar mask;
 int rack;
 
-// Количество битов в коде
-#define BITS 12
-// Максимальное значение кода (2 ^ 12 - 1)
-#define MAX_CODE ((1 << BITS) - 1)
-// Размер алфавита, является также кодом конца потока
-#define ALPHABET_SIZE 256
-// Код первой добавляемой в словарь фразы после записи символов алфавита
-#define FIRST_CODE 257
-
 void ShowOptions() {
     std::cout
         << "To compress enter:\n./main -c path/to/input.txt "
@@ -123,7 +114,10 @@ void CompressFile(const std::string& input_filename, const std::string& output_f
     while (input.get(symbol)) {
         full_input += symbol;
     }
-    auto [bwt_text, bwt_coefficient] = BWT_encode(full_input);
+
+    AdoptedSuffixTree tree;
+    tree.createTree(full_input);
+    auto [bwt_text, bwt_coefficient] = tree.BWT_encode_optimized();
 
     std::vector<size_t> codes = LZW_encode(bwt_text);
 
