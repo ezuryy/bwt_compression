@@ -3,7 +3,7 @@
 #include "test.h"
 
 void CompressDecompressTest(const string& test_filename, const string& compressed_filename,
-                            const string& decompressed_filename, const int& expected_ratio) {
+                            const string& decompressed_filename, const size_t& expected_ratio) {
     CompressFile(test_filename, compressed_filename);
     ExpandFile(compressed_filename, decompressed_filename);
 
@@ -62,4 +62,29 @@ TEST(Test4, simpleString) {
     string decompressed_filename = "../tests/decompressed004.txt";
 
     CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 150);
+}
+
+TEST(Test5, russianText) {
+    string test_filename = "../tests/text005.txt";
+    string compressed_filename = "../tests/compressed005.txt";
+    string decompressed_filename = "../tests/decompressed005.txt";
+
+    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 50);
+}
+
+TEST(Test6, ASCIItable) {
+    string test_filename = "../tests/text006.txt";
+    string compressed_filename = "../tests/compressed006.txt";
+    string decompressed_filename = "../tests/decompressed006.txt";
+
+    std::ofstream test_f(test_filename);
+    if (!test_f.is_open()) {
+        throw std::invalid_argument("can't open file " + test_filename);
+    }
+    for (size_t i = 0; i < ALPHABET_SIZE; ++i) {
+        test_f << static_cast<uchar>(i);
+    }
+    test_f.close();
+
+    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 50);
 }
