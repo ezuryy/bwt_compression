@@ -16,6 +16,7 @@ void CompressDecompressTest(const string& test_filename, const string& compresse
         test_input += (line + '\n');
         line.clear();
     }
+    test_f.close();
 
     std::ifstream decompressed_f(decompressed_filename, std::ios::in);
     if (!decompressed_f.is_open()) {
@@ -25,6 +26,7 @@ void CompressDecompressTest(const string& test_filename, const string& compresse
     while (std::getline(decompressed_f, line)) {
         decompressed_input += (line + '\n');
     }
+    decompressed_f.close();
 
     EXPECT_EQ(test_input, decompressed_input);
 
@@ -77,14 +79,14 @@ TEST(Test6, ASCIItable) {
     string compressed_filename = "../tests/compressed006.txt";
     string decompressed_filename = "../tests/decompressed006.txt";
 
-    std::ofstream test_f(test_filename);
-    if (!test_f.is_open()) {
-        throw std::invalid_argument("can't open file " + test_filename);
-    }
-    for (size_t i = 0; i < ALPHABET_SIZE; ++i) {
-        test_f << static_cast<uchar>(i);
-    }
-    test_f.close();
+//    std::ofstream test_f(test_filename);
+//    if (!test_f.is_open()) {
+//        throw std::invalid_argument("can't open file " + test_filename);
+//    }
+//    for (size_t i = 0; i < ALPHABET_SIZE; ++i) {
+//        test_f << static_cast<uchar>(i);
+//    }
+//    test_f.close();
 
     CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 50);
 }
