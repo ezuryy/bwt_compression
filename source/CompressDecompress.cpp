@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "CompressDecompress.h"
 
 size_t CompressionRatio(const string& input_filename,
                         const string& output_filename) {

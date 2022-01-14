@@ -1,5 +1,5 @@
-#ifndef MY_PROJECT_FUNCTIONS_H
-#define MY_PROJECT_FUNCTIONS_H
+#ifndef MY_PROJECT_COMPRESSDECOMPRESS_H
+#define MY_PROJECT_COMPRESSDECOMPRESS_H
 
 #include "variables.h"
 #include "BWT.h"
@@ -30,4 +30,4 @@ void CompressFile(const std::string& input_filename, const std::string& output_f
 
 void ExpandFile(const std::string& input_filename, const std::string& output_filename);
 
-#endif  // MY_PROJECT_FUNCTIONS_H
+#endif  // MY_PROJECT_COMPRESSDECOMPRESS_H
