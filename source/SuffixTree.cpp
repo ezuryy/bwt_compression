@@ -17,7 +17,7 @@ void AdoptedSuffixTree::addSuffix(const int& suffix_begin_index) {
         int edge_compare_index = edge[0];
         /* ребро для сравнения есть, значит пора пройтись по нему и сравнить с суффиксом. Прерываемся, если ребро/суффикс
          * закончились, или же было найдено несовпадение */
-        for (; edge_compare_index < edge[1]; edge_compare_index++, suffix_compare_index++) {
+        for (; edge_compare_index < edge[1] && suffix_compare_index < (int)str_.size() && edge_compare_index < (int)str_.size(); edge_compare_index++, suffix_compare_index++) {
             // найдено несовпадение - нужно поделить ребро
             if (str_[suffix_compare_index] != str_[edge_compare_index]) {
                 // создаем новый узел
