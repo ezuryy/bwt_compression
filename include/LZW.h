@@ -3,8 +3,8 @@
 
 #include "variables.h"
 
-vector<size_t> LZW_encode(const vector<uchar>& input);
+vector<size_t> LZW_encode(const ustring& input);
 
-string LZW_decode(const vector<size_t>& input);
+ustring LZW_decode(const vector<size_t>& input);
 
 #endif  // MY_PROJECT_LZW_H

@@ -25,13 +25,14 @@ class AdoptedSuffixTree {
         map<uchar, Edge> edges;
     };
     Node* root_;
-    vector<uchar> str_;
+    ustring str_;
     void addSuffix(const int& suffix_begin_index);
 public:
-    AdoptedSuffixTree() = default;
+    AdoptedSuffixTree() : root_(nullptr) {}
+    explicit AdoptedSuffixTree(ustring& input);
     ~AdoptedSuffixTree();
-    void createTree(const string& input);
-    pair<vector<uchar>, int> BWT_encode_optimized();
+    void createTree(ustring& input);
+    pair<ustring, int> BWT_encode_optimized();
 };
 
 

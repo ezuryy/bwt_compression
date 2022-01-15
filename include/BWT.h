@@ -3,8 +3,8 @@
 
 #include "variables.h"
 
-pair<string, size_t> BWT_encode(const string& input);
+pair<ustring, int> BWT_encode(const ustring& input);
 
-string BWT_decode(const size_t& k, const string& last);
+ustring BWT_decode(const size_t& k, const ustring& last, const bool& use_optimized);
 
 #endif  // MY_PROJECT_BWT_H

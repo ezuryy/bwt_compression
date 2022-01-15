@@ -1,5 +1,14 @@
 #include "SuffixTree.h"
 
+AdoptedSuffixTree::AdoptedSuffixTree(ustring& input) : str_(input){
+    root_ = new Node;
+    str_.push_back(END_SYMBOL);
+    root_->edges.insert({str_[0], {nullptr, 0, {0, static_cast<int>(str_.size())}}});
+    for (size_t i = 1; i < str_.size(); i++) {
+        addSuffix(static_cast<int>(i));
+    }
+}
+
 void AdoptedSuffixTree::addSuffix(const int& suffix_begin_index) {
     int suffix_compare_index = suffix_begin_index;
     Node *curr_node = root_;
@@ -42,17 +51,13 @@ void AdoptedSuffixTree::addSuffix(const int& suffix_begin_index) {
     }
 }
 
-void AdoptedSuffixTree::createTree(const string &input_str) {
+void AdoptedSuffixTree::createTree(ustring& input) {
     root_ = new Node;
-    for (const auto& symbol : input_str) {
-        str_.push_back(static_cast<uchar>(symbol));
-    }
-    str_.push_back(END_SYMBOL);
-    // на первом шаге есть одно ребро - вся строка. Добавляем его
+    str_ = input;
+    str_ += END_SYMBOL;
     root_->edges.insert({str_[0], {nullptr, 0, {0, static_cast<int>(str_.size())}}});
-    // поочередно добавляем суффиксы
-    for (int i = 1; i < static_cast<int>(str_.size()); i++) {
-        addSuffix(i);
+    for (size_t i = 1; i < str_.size(); i++) {
+        addSuffix(static_cast<int>(i));
     }
 }
 
@@ -77,9 +82,9 @@ AdoptedSuffixTree::~AdoptedSuffixTree() {
     }
 }
 
-pair<vector<uchar>, int> AdoptedSuffixTree::BWT_encode_optimized() {
+pair<ustring, int> AdoptedSuffixTree::BWT_encode_optimized() {
     int coefficient = 0;
-    vector<uchar> bwt_result;
+    ustring bwt_result;
     vector<int> answer;
     stack<pair<Node*, int>> s;
     s.push({root_, -1});
@@ -94,7 +99,7 @@ pair<vector<uchar>, int> AdoptedSuffixTree::BWT_encode_optimized() {
         }
         if (cur_index != -1) { // нашли лист
             int true_index = ((cur_index == 0) ? int(str_.size() - 1) : int(cur_index - 1));
-            bwt_result.push_back(str_[true_index]);
+            bwt_result += str_[true_index];
             answer.push_back(true_index);
             if (str_[true_index] == END_SYMBOL) {
                 coefficient = true_index;

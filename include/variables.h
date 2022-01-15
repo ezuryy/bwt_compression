@@ -20,7 +20,7 @@ using std::ifstream;
 using std::ofstream;
 
 typedef unsigned char uchar;
-
+typedef std::basic_string<unsigned char> ustring;
 // Количество битов в коде
 #define BITS 12
 // Максимальное значение кода (2 ^ 12 - 1)
