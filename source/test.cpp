@@ -35,13 +35,12 @@ void CompressDecompressTest(const string& test_filename, const string& compresse
     EXPECT_TRUE(ratio >= expected_ratio);
 }
 
-TEST(Test1, textAboutInternetAndMind) {
+TEST(Test1, AliceText) {
     string test_filename = "../tests/text001.txt";
     string compressed_filename = "../tests/compressed001.txt";
     string decompressed_filename = "../tests/decompressed001.txt";
 
-    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 160, false);
-    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 160, true);
+    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 140, false);
 }
 
 TEST(Test2, repeatedFourTimesText) {
@@ -49,8 +48,7 @@ TEST(Test2, repeatedFourTimesText) {
     string compressed_filename = "../tests/compressed002.txt";
     string decompressed_filename = "../tests/decompressed002.txt";
 
-    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 250, false);
-    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 250, true);
+    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 190, false);
 }
 
 TEST(Test3, textAboutLZW) {
@@ -67,8 +65,8 @@ TEST(Test4, simpleString) {
     string compressed_filename = "../tests/compressed004.txt";
     string decompressed_filename = "../tests/decompressed004.txt";
 
-    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 150, false);
-    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 150, true);
+    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 10, false);
+    CompressDecompressTest(test_filename, compressed_filename, decompressed_filename, 10, true);
 }
 
 TEST(Test5, russianText) {

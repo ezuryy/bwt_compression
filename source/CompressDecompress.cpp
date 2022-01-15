@@ -25,31 +25,33 @@ void CompressFile(const std::string& input_filename, const std::string& output_f
 
     char symbol;
     ustring full_input;
-    while (input.get(symbol)) {
-        full_input += uchar(symbol);
+    while(!input.eof()) {
+        size_t i = 0;
+        while (i < BATCH_SIZE && input.get(symbol)) {
+            full_input += uchar(symbol);
+            ++i;
+        }
+        ustring bwt_text;
+        int bwt_coefficient;
+        std::vector<size_t> codes;
+        if (use_optimized) {
+            AdoptedSuffixTree tree(full_input);
+            auto result = tree.BWT_encode_optimized();
+            bwt_text = result.first;
+            bwt_coefficient = result.second;
+        } else {
+            auto result = BWT_encode(full_input);
+            bwt_text = result.first;
+            bwt_coefficient = result.second;
+        }
+        codes = LZW_encode(bwt_text);
+        WriteBits(bfile_out, bwt_coefficient, BITS);
+        for (const size_t &code: codes) {
+            WriteBits(bfile_out, code, BITS);
+        }
+        WriteBits(bfile_out, ALPHABET_SIZE, BITS);
+        full_input.clear();
     }
-
-    ustring bwt_text;
-    int bwt_coefficient;
-    std::vector<size_t> codes;
-    if (use_optimized) {
-        AdoptedSuffixTree tree(full_input);
-        auto result = tree.BWT_encode_optimized();
-        bwt_text = result.first;
-        bwt_coefficient = result.second;
-    } else {
-        auto result = BWT_encode(full_input);
-        bwt_text = result.first;
-        bwt_coefficient = result.second;
-    }
-    codes = LZW_encode(bwt_text);
-
-    bfile_out << bwt_coefficient << ' ';
-    for (const size_t& code : codes) {
-        WriteBits(bfile_out, code, BITS);
-    }
-    WriteBits(bfile_out, ALPHABET_SIZE, BITS);
-
     CloseOutputBFile(bfile_out);
     input.close();
 }
@@ -63,27 +65,27 @@ void ExpandFile(const std::string& input_filename, const std::string& output_fil
     ifstream bfile_in = OpenInputBFile(input_filename);
 
     string bwt_coefficient_str;
-    int symbol = bfile_in.get();
-    while (symbol != int(' ')) {
-        bwt_coefficient_str += char(symbol);
-        symbol = bfile_in.get();
-    }
-    size_t bwt_coefficient = stol(bwt_coefficient_str);
 
-    std::vector<size_t> codes;
-    size_t new_code;
-    size_t old_code = ReadBits(bfile_in, BITS);
-    if (old_code == ALPHABET_SIZE) return;
-    codes.push_back(old_code);
-    while ((new_code = ReadBits(bfile_in, BITS)) != ALPHABET_SIZE) {
-        codes.push_back(new_code);
-    }
-    ustring bwt_text = LZW_decode(codes);
+    while(!bfile_in.eof()) {
+        size_t bwt_coefficient = 0;
+        try {
+            bwt_coefficient = ReadBits(bfile_in, BITS);
+        } catch (...) {
+            break;
+        }
+        std::vector<size_t> codes;
+        size_t new_code;
 
-    ustring original_text = BWT_decode(bwt_coefficient, bwt_text, use_optimized);
+        while ((new_code = ReadBits(bfile_in, BITS)) != ALPHABET_SIZE) {
+            codes.push_back(new_code);
+        }
+        ustring bwt_text = LZW_decode(codes);
 
-    for (const auto& ch : original_text) {
-        output << ch;
+        ustring original_text = BWT_decode(bwt_coefficient, bwt_text, use_optimized);
+
+        for (const auto &ch: original_text) {
+            output << ch;
+        }
     }
 
     CloseInputBFile(bfile_in);

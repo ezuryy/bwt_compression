@@ -34,5 +34,7 @@ typedef std::basic_string<unsigned char> ustring;
 #define FIRST_CODE 257
 // Символ, который мы считаем не появляющимся. Служит символом окончания строки в суффиксном дереве
 #define END_SYMBOL static_cast<uchar>(255)
+// Размер блока
+#define BATCH_SIZE 4096
 
 #endif //MY_PROJECT_VARIABLES_H

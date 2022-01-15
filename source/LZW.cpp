@@ -32,6 +32,9 @@ vector<size_t> LZW_encode(const ustring& input) {
 
     ustring x;
     x += input[0];
+    if (input.size() == 1) {
+        output.push_back(dictionary[x]);
+    }
     ustring y;
     size_t next_code = FIRST_CODE;
     for (size_t i = 1; i < input.size(); ++i) {
