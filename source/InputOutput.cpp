@@ -1,52 +1,36 @@
 #include "InputOutout.h"
 
-uchar mask;
-int rack;
-
-void ShowOptions() {
-    std::cout
-            << "To compress enter:\n./main -c path/to/input.txt "
-               "path/to/output.txt\n"
-               "or\n./main --compress path/to/input.txt path/to/output.txt\n"
-               "To decompress enter:\n./main -d path/to/input.txt "
-               "path/to/output.txt\n"
-               "or\n./main --decompress path/to/input.txt path/to/output.txt\n";
-}
-
-ofstream OpenOutputBFile(const string& name) {
-    ofstream bfile_out;
+void InputOutput::OpenOutputBFile(const string& name) {
     bfile_out.open(name, std::ios::out | std::ios::binary);
     if (!bfile_out.is_open()) {
         throw std::invalid_argument("can't open file " + name);
     }
-    rack = 0;
-    mask = 0x80;
-    return bfile_out;
+//    rack = 0;
+//    mask = 0x80;
 }
 
-ifstream OpenInputBFile(const string& name) {
-    ifstream bfile_in;
+void InputOutput::OpenInputBFile(const string& name) {
     bfile_in.open(name, std::ios::in | std::ios::binary);
     if (!bfile_in.is_open()) {
         throw std::invalid_argument("can't open file " + name);
     }
-    rack = 0;
-    mask = 0x80;
-    return bfile_in;
+//    rack = 0;
+//    mask = 0x80;
+//    return bfile_in;
 }
 
-void CloseOutputBFile(ofstream& bfile_out) {
+void InputOutput::CloseOutputBFile() {
     if (mask != 0x80) {
         bfile_out.put(static_cast<char>(rack));
     }
     bfile_out.close();
 }
 
-void CloseInputBFile(ifstream& bfile_in) {
+void InputOutput::CloseInputBFile() {
     bfile_in.close();
 }
 
-void WriteBits(ofstream& bfile_out, size_t code, int count) {
+void InputOutput::WriteBits(size_t code, int count) {
     size_t mask_;
     mask_ = 1L << (count - 1);
     while (mask_ != 0) {
@@ -63,7 +47,7 @@ void WriteBits(ofstream& bfile_out, size_t code, int count) {
     }
 }
 
-size_t ReadBits(ifstream& bfile_in, int bit_count) {
+size_t InputOutput::ReadBits(int bit_count) {
     size_t mask_;
     size_t return_value;
 
@@ -82,6 +66,20 @@ size_t ReadBits(ifstream& bfile_in, int bit_count) {
         if (mask == 0) mask = 0x80;
     }
     return return_value;
+}
+
+bool InputOutput::InputReadable() {
+    return !bfile_in.eof();
+}
+
+void ShowOptions() {
+    std::cout
+            << "To compress enter:\n./main -c path/to/input.txt "
+               "path/to/output.txt\n"
+               "or\n./main --compress path/to/input.txt path/to/output.txt\n"
+               "To decompress enter:\n./main -d path/to/input.txt "
+               "path/to/output.txt\n"
+               "or\n./main --decompress path/to/input.txt path/to/output.txt\n";
 }
 
 size_t Filesize(const string& filename) {

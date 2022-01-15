@@ -3,19 +3,22 @@
 
 #include "variables.h"
 
+struct InputOutput {
+    uchar mask = 0x80;
+    int rack = 0;
+    ofstream bfile_out;
+    ifstream bfile_in;
+
+    void OpenOutputBFile(const string& name);
+    void OpenInputBFile(const string& name);
+    void CloseOutputBFile();
+    void CloseInputBFile();
+    void WriteBits(size_t code, int count);
+    size_t ReadBits(int bit_count);
+    bool InputReadable();
+};
+
 void ShowOptions();
-
-ofstream OpenOutputBFile(const string& name);
-
-ifstream OpenInputBFile(const string& name);
-
-void CloseOutputBFile(ofstream& bfile_out);
-
-void CloseInputBFile(ifstream& bfile_in);
-
-void WriteBits(ofstream& bfile_out, size_t code, int count);
-
-size_t ReadBits(ifstream& bfile_in, int bit_count);
 
 size_t Filesize(const string& filename);
 

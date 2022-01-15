@@ -21,7 +21,8 @@ void CompressFile(const std::string& input_filename, const std::string& output_f
         throw std::invalid_argument("can't open file " +
                                     input_filename);
     }
-    ofstream bfile_out = OpenOutputBFile(output_filename);
+    InputOutput io;
+    io.OpenOutputBFile(output_filename);
 
     char symbol;
     ustring full_input;
@@ -45,14 +46,14 @@ void CompressFile(const std::string& input_filename, const std::string& output_f
             bwt_coefficient = result.second;
         }
         codes = LZW_encode(bwt_text);
-        WriteBits(bfile_out, bwt_coefficient, BITS);
+        io.WriteBits(bwt_coefficient, BITS);
         for (const size_t &code: codes) {
-            WriteBits(bfile_out, code, BITS);
+            io.WriteBits(code, BITS);
         }
-        WriteBits(bfile_out, ALPHABET_SIZE, BITS);
+        io.WriteBits(ALPHABET_SIZE, BITS);
         full_input.clear();
     }
-    CloseOutputBFile(bfile_out);
+    io.CloseOutputBFile();
     input.close();
 }
 
@@ -62,21 +63,22 @@ void ExpandFile(const std::string& input_filename, const std::string& output_fil
         throw std::invalid_argument("can't open file " +
                                     output_filename);
     }
-    ifstream bfile_in = OpenInputBFile(input_filename);
+    InputOutput io;
+    io.OpenInputBFile(input_filename);
 
     string bwt_coefficient_str;
 
-    while(!bfile_in.eof()) {
-        size_t bwt_coefficient = 0;
+    while(io.InputReadable()) {
+        size_t bwt_coefficient;
         try {
-            bwt_coefficient = ReadBits(bfile_in, BITS);
+            bwt_coefficient = io.ReadBits(BITS);
         } catch (...) {
             break;
         }
         std::vector<size_t> codes;
         size_t new_code;
 
-        while ((new_code = ReadBits(bfile_in, BITS)) != ALPHABET_SIZE) {
+        while ((new_code = io.ReadBits(BITS)) != ALPHABET_SIZE) {
             codes.push_back(new_code);
         }
         ustring bwt_text = LZW_decode(codes);
@@ -88,6 +90,6 @@ void ExpandFile(const std::string& input_filename, const std::string& output_fil
         }
     }
 
-    CloseInputBFile(bfile_in);
+    io.CloseInputBFile();
     output.close();
 }
