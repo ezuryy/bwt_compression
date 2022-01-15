@@ -2,7 +2,23 @@
 #include "LZW.h"
 
 vector<size_t> LZW_encode(const ustring& input) {
-    unordered_map<ustring, size_t> dictionary = unordered_map<ustring, size_t>();
+    auto hash = [](const ustring& str){
+        size_t hash = 5381;
+        size_t c;
+        size_t i = 0;
+        while (i < str.size()) {
+            c = (size_t) str[i];
+            hash = ((hash << 5) + hash) + c;
+            ++i;
+        }
+        return hash;
+    };
+    auto equal = [](const ustring& l, const ustring& r){
+        return l == r;
+    };
+    std::unordered_map<ustring, size_t, decltype(hash), decltype(equal)> dictionary(8, hash, equal);
+
+//    unordered_map<ustring, size_t> dictionary = unordered_map<ustring, size_t>();
     vector<size_t> output;
 
     if (input.empty()) {
