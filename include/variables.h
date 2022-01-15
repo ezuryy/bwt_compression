@@ -18,6 +18,9 @@ using std::unordered_map;
 using std::vector;
 using std::ifstream;
 using std::ofstream;
+using std::queue;
+using std::stack;
+using std::map;
 
 typedef unsigned char uchar;
 typedef std::basic_string<unsigned char> ustring;

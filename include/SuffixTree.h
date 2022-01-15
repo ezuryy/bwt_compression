@@ -3,23 +3,14 @@
 
 #include "variables.h"
 
-using std::vector;
-using std::string;
-using std::map;
-using std::pair;
-using std::queue;
-using std::stack;
-using std::cout;
-
-typedef unsigned char uchar;
-
 class AdoptedSuffixTree {
 
     struct Node {
         struct Edge {
-            Node* node;
+            Node* node{};
             int bwt_index = -1;
-            vector<int> from_to;
+            int from = 0;
+            int to = 0;
         };
         // красно-чёрное дерево, ребра сортируются по первому значению uchar
         map<uchar, Edge> edges;
@@ -34,7 +25,5 @@ public:
     void createTree(ustring& input);
     pair<ustring, int> BWT_encode_optimized();
 };
-
-
 
 #endif //MY_PROJECT_SUFFIXTREE_H

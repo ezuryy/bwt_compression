@@ -4,7 +4,7 @@
 
 ### BWT
 
-### `pair<string, size_t> BWT_encode(const string& input)`
+### `pair<ustring, int> BWT_encode(const ustring& input)`
 
 Реализация прямого преобразования Барроуза — Уилера.  
 Пусть `N` - длина входного слова. Составляем вектор строк, содержащий все его циклические сдвиги. 
@@ -14,7 +14,7 @@
 
 Для хранения матрицы циклических сдвигов используется вектор длины `N`, содержащий строки длины `N` => используем `О(N^2)` памяти. 
 
-### `string BWT_decode(const size_t& k, const string& last)`
+### `ustring BWT_decode(const size_t& k, const ustring& last, const bool& use_optimized)`
 
 Реализация обратного преобразования Барроуза — Уилера.  
 Пусть `N` - длина входного слова. Составляем вектор символов, содержащихся в искомом слове за `O(N)`, 
@@ -28,9 +28,42 @@
 
 Длина любого объекта, используемого в этой функции, не превышает `N` => сложность по памяти `O(N)`.
 
+### Suffix tree for BWT
+
+#### `void addSuffix(const int& suffix_begin_index)` и `void createTree(ustring& input)`
+
+Добавление в суффиксное дерево алгоритмом Укконена.  
+Идём по дереву и сверяем символы суффикса с имеющимися. Когда находим несовпадение, есть два случая:
+1. Из узла нет ребра, нужного для продолжения (нет начального символа, сопадающего с начальным символом оставшейся
+части суффикса). Тогда мы из данного узла пускаем ребро, помеченное оставшейся частью суффикса
+2. Несовпадение пришлось на ребро. Тогда нам нужно в месте несовпадения создать узел. Таким образом, мы фактически
+делим ребро этим узлом. Чтобы соблюсти изначальное состояние, мы в данный узел направляем часть ребра до несовпадения, 
+а из него пускаем оставшуюся часть ребра. Также, мы добавляем новое исходящее ребро, помеченное оставшейся частью
+суффикса
+
+Спускаемся в дерево по указателям, хранимым в каждом узле. Поэтому фактически проходимся по имеющимся ветвям за 
+константу (ищем в корне подходящее ребро - константа т.к. мощность алфавита константа, когда добавили в текущее ребро 
+переходим по ссылке в следующее, т.к. вершин не может быть создано больше, чем их есть, то амортизационно на каждой 
+фазе будет создано `O(1)` вершин). Итого, суффикс добавляется за константу, а дерево создается за `O(N)`.
+
+В течение работы алгоритма создается не более `O(N)` вершин по лемме о размере суффиксного дерева для строки. В каждой 
+вершине хранится список ребер (их число не больше можности алфавита - константа), в каждом ребре хранятся индексы 
+начала и конца ребра, индекс суффикса в префиксном дереве (если это ребро ведет к листу) и указатель на вершину для перехода. 
+Таким образом, кол-во памяти, необходимой для хранения одной вершины - константа, тогда для хранения дерева нужно `O(N)` памяти.  
+
+#### `~AdoptedSuffixTree()`
+
+Удаление представляет из себя алгоритм обхода в ширину. Для его реализации используется очередь. 
+Алгоритм запускается с корня. Выполняется за `O(N)`
+
+#### `pair<ustring, int> BWT_encode_optimized()`
+
+Получение преобразованной строки представляет из себя алгоритм обхода в глубину. Для его реализации используется стек.
+Алгоритм запускается с корня. Выполняется за `O(N)`
+
 ### LZW
 
-### `vector<size_t> LZW_encode(const string& input)`  
+### `vector<size_t> LZW_encode(const ustring& input)`  
 
 Реализация кодирования алгоритмом Лемпеля — Зива — Велча.  
 Используем хэш-таблицу для хранения пар `строка -> ее код`, то есть словаря. Для хранения кодов используем вектор. 
@@ -41,7 +74,7 @@
 Размер словаря не превышает константу `MAX_CODE`, в каждом элементе хэш-таблицы хранится строка, длина которой не 
 превышает `N`, а длина выходного вектора не больше длины слова `N` => затраты по памяти составляют `O(N)`.
 
-### `string LZW_decode(const vector<size_t>& input)`  
+### `ustring LZW_decode(const vector<size_t>& input)`  
 
 Реализация декодирования алгоритмом Лемпеля — Зива — Велча.  
 Теперь для хранения словаря удобно использовать вектор, т.к. обращение по индексу за константу и добавление 
@@ -56,31 +89,27 @@
 
 Отрабатывает при неправильном вводе и говорит пользователю, как пользоваться программой.
 
-### `void OpenOutputBFile(const string& name)` 
+### `ofstream OpenOutputBFile(const string& name)` 
 
 Открывает файл для записи сжатого текста. 
 
-### `void OpenInputBFile(const string& name)`
+### `ifstream OpenInputBFile(const string& name)`
 
 Открывает файл для считывания сжатого текста.
 
-### `void CloseOutputBFile()`
+### `void CloseOutputBFile(ofstream& bfile_out)`
 
 Закрывает файл для записи сжатого текста.
 
-### `void CloseInputBFile()`
+### `void CloseInputBFile(ifstream& bfile_in)`
 
 Закрывает файл, содержащий сжатый текст.
 
-### `void CloseInputBFile()`
-
-Закрывает файл, содержащий сжатый текст.
-
-### `void WriteBits(size_t code, int count)`
+### `void WriteBits(ofstream& bfile_out, size_t code, int count)`
 
 Побитово записывает код. Цикл повторяется `BITS - 1` раз. Внутри цикла операции выполняются за константу.  
 
-### `size_t ReadBits(int bit_count)`
+### `size_t ReadBits(ifstream& bfile_in, int bit_count)`
 
 Посимвольно считывает код. Цикл повторяется `BITS - 1` раз. Внутри цикла операции выполняются за константу.  
 
@@ -92,7 +121,7 @@
 
 Выводит размер входного и выходного файла, возвращает коэффициент сжатия в процентах.
 
-### `void CompressFile(const std::string& input_filename, const std::string& output_filename)`
+### `void CompressFile(const std::string& input_filename, const std::string& output_filename, const bool& use_optimized)`
 
 Операция сжатия.  
 Открывает файл, который нужно сжать, открывает файл, в который нужно записать результат компрессии. Пусть `N` - 
@@ -104,7 +133,7 @@
 Затраты по памяти составляют `O(N)`, т.к. используется две строки длинной порядка `N` и вектор, длина которого также 
 не превышает `N`. Но т.к. при вызове `BWT_encode()` используется `O(N^2)` памяти, то общие затраты по памяти составят `O(N^2)`. 
 
-### `void ExpandFile(const std::string& input_filename, const std::string& output_filename)`
+### `void ExpandFile(const std::string& input_filename, const std::string& output_filename, const bool& use_optimized)`
 
 Операция распаковки.  
 Открывает файл, который нужно распаковать, открывает файл, в который нужно записать исходное сообщение. Пусть `N` -
@@ -118,7 +147,7 @@
 
 ## Использованные структуры данных
 
-`pair<string, size_t> BWT_encode(const string& input)`:  
+`pair<ustring, int> BWT_encode(const ustring& input)`:  
 * Для хранения циклических сдвигов используется вектор, т.к. для него добавление в конец производится за константу, 
 сортировка имеет сложность `NlogN`.  
 
@@ -129,7 +158,7 @@
 строку используется хэш-таблица (добавление и доступ за константу).
 * Для хранения переходов используется вектор (добавление и доступ за константу).  
 
-`vector<size_t> LZW_encode(const string& input)`:  
+`vector<size_t> LZW_encode(const ustring& input)`:  
 * Для хранения пар `строка -> ее код` используется хэш-таблица, т.к. нужно за константу проверять наличие фразы в 
 словаре, а также за константу добавлять новые фразы с кодами.
 * Для хранения итоговой последовательности кодов используется вектор (т.к. добавление в конец за константу).
@@ -138,38 +167,51 @@
 * Для хранения словаря удобно использовать вектор, т.к. обращение по индексу за константу и добавление
   в конец за константу.
 
+`AdoptedSuffixTree`:
+В каждой вершине хранится список ребер (красно-черное дерево, потому что нам нужно хранить отсортированные по значению символов ребра), в 
+каждом ребре хранятся индексы начала и конца ребра, индекс суффикса в префиксном дереве (если это ребро ведет к листу) 
+и указатель на вершину для перехода.
+
 При работе с файлами используются те же структуры данных, что и при работе алгоритмов и преобразований.
 
 ## Оценка сложности 
 
-`pair<string, size_t> BWT_encode(const string& input)`: `O(NlogN)`  
-`string BWT_decode(const size_t& k, const string& last)`: `O(NlogN)`  
-`vector<size_t> LZW_encode(const string& input)`: `O(N)`  
-`string LZW_decode(const vector<size_t>& input)`: `O(N)`  
+`pair<ustring, int> BWT_encode(const ustring& input)`: `O(NlogN)`  
+`ustring BWT_decode(const size_t& k, const ustring& last, const bool& use_optimized)`: `O(NlogN)`  
+`vector<size_t> LZW_encode(const ustring& input)`: `O(N)`  
+`ustring LZW_decode(const vector<size_t>& input)`: `O(N)`  
+`void addSuffix(const int& suffix_begin_index)` и `void createTree(ustring& input)`: `O(N)`  
+`~AdoptedSuffixTree()`: `O(N)`  
+`pair<ustring, int> BWT_encode_optimized()`: `O(N)`
 `ShowOptions()`: `O(1)`  
-`void OpenOutputBFile(const string& name)`: `O(1)`  
-`void OpenInputBFile(const string& name)`: `O(1)`  
-`void CloseOutputBFile()`: `O(1)`  
-`void CloseInputBFile()`: `O(1)`  
-`void WriteBits(size_t code, int count)`: `O(1)`  
-`size_t ReadBits(int bit_count)`: `O(1)`  
+`ofstream OpenOutputBFile(const string& name)`: `O(1)`  
+`ifstream OpenInputBFile(const string& name)`: `O(1)`  
+`void CloseOutputBFile(ofstream& bfile_out)`: `O(1)`  
+`void CloseInputBFile(ifstream& bfile_in)`: `O(1)`  
+`void WriteBits(ofstream& bfile_out, size_t code, int count)`: `O(1)`  
+`size_t ReadBits(ifstream& bfile_in, int bit_count)`: `O(1)`  
 `size_t Filesize(const string& filename)`: `O(1)`  
-`size_t CompressionRatio(const string& input_filename, сonst string& output_filename)`: `O(NlogN)`  
-`void ExpandFile(const std::string& input_filename, const std::string& output_filename)`: `O(NlogN)`  
+`size_t CompressionRatio(const string& input_filename, const string& output_filename)` : `O(1)`  
+`void CompressFile(const std::string& input_filename, const std::string& output_filename, const bool& use_optimized)`: `O(NlogN)`  
+`void ExpandFile(const std::string& input_filename, const std::string& output_filename, const bool& use_optimized)`: `O(NlogN)`  
 
 ## Оценка использования памяти
 
 `pair<string, size_t> BWT_encode(const string& input)`: `O(N^2)`   
-`string BWT_decode(const size_t& k, const string& last)`: `O(N)`  
+`ustring BWT_decode(const size_t& k, const ustring& last, const bool& use_optimized)`: `O(N)`  
 `vector<size_t> LZW_encode(const string& input)`: `O(N)`  
-`string LZW_decode(const vector<size_t>& input)`: `O(N)`  
+`ustring LZW_decode(const vector<size_t>& input)`: `O(N)`  
+`void addSuffix(const int& suffix_begin_index)` и `void createTree(ustring& input)`: `O(N)`
+`~AdoptedSuffixTree()`: `O(1)`  
+`pair<ustring, int> BWT_encode_optimized()`: `O(1)`  
 `ShowOptions()`: `O(1)`  
-`void OpenOutputBFile(const string& name)`: `O(1)`  
-`void OpenInputBFile(const string& name)`: `O(1)`  
-`void CloseOutputBFile()`: `O(1)`  
-`void CloseInputBFile()`: `O(1)`  
-`void WriteBits(size_t code, int count)`: `O(1)`  
-`size_t ReadBits(int bit_count)`: `O(1)`  
+`ofstream OpenOutputBFile(const string& name)`: `O(1)`  
+`ifstream OpenInputBFile(const string& name)`: `O(1)`  
+`void CloseOutputBFile(ofstream& bfile_out)`: `O(1)`  
+`void CloseInputBFile(ifstream& bfile_in)`: `O(1)`  
+`void WriteBits(ofstream& bfile_out, size_t code, int count)`: `O(1)`  
+`size_t ReadBits(ifstream& bfile_in, int bit_count)`: `O(1)`  
 `size_t Filesize(const string& filename)`: `O(1)`  
-`size_t CompressionRatio(const string& input_filename, сonst string& output_filename)`: `O(N^2)`  
-`void ExpandFile(const std::string& input_filename, const std::string& output_filename)`: `O(N)`  
+`size_t CompressionRatio(const string& input_filename, const string& output_filename)` : `O(1)`  
+`void CompressFile(const std::string& input_filename, const std::string& output_filename, const bool& use_optimized)`: `O(N^2)`  
+`void ExpandFile(const std::string& input_filename, const std::string& output_filename, const bool& use_optimized)`: `O(N)`  
