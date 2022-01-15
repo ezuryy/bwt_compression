@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
         string output_filename = argv[3];
         if (work_type == "-c" || work_type == "--compress") {
             // compress
-            CompressFile(input_filename, output_filename);
+            CompressFile(input_filename, output_filename, true);
 
             std::cout << "Compression of file " << input_filename
                       << " into file " << output_filename << " is completed.\n";
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
         } else if (work_type == "-d" || work_type == "--decompress") {
             // decompress
-            ExpandFile(input_filename, output_filename);
+            ExpandFile(input_filename, output_filename, true);
 
             std::cout << "Decompression of file " << input_filename
                       << " into file " << output_filename << " is completed.\n";

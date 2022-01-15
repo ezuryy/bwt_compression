@@ -2,7 +2,7 @@
 #include "LZW.h"
 
 vector<size_t> LZW_encode(const ustring& input) {
-    unordered_map<ustring, size_t> dictionary;
+    unordered_map<ustring, size_t> dictionary = unordered_map<ustring, size_t>();
     vector<size_t> output;
 
     if (input.empty()) {
