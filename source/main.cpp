@@ -1,0 +1,31 @@
+#include "CompressDecompress.h"
+
+int main(int argc, char *argv[]) {
+    if (argc == 4) {
+        string work_type = argv[1];
+        string input_filename = argv[2];
+        string output_filename = argv[3];
+        if (work_type == "-c" || work_type == "--compress") {
+            // compress
+            CompressFile(input_filename, output_filename, true);
+
+            std::cout << "Compression of file " << input_filename
+                      << " into file " << output_filename << " is completed.\n";
+
+            CompressionRatio(input_filename, output_filename);
+
+        } else if (work_type == "-d" || work_type == "--decompress") {
+            // decompress
+            ExpandFile(input_filename, output_filename, true);
+
+            std::cout << "Decompression of file " << input_filename
+                      << " into file " << output_filename << " is completed.\n";
+
+        } else {
+            ShowOptions();
+        }
+    } else {
+        ShowOptions();
+    }
+    return 0;
+}

@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install
+          sudo apt install lcov valgrind gcovr
+          git submodule update --init
+      - name: Build
+        run: |
+          mkdir _builds
+          cd _builds
+          cmake ..
+          make all
+      - name: Tests
+        run: |
+          cd _builds
+          ./test_compression
+      - name: Check valgrind
+        run: |
+          cd _builds
+          valgrind --leak-check=full --error-exitcode=1 ./test_compression
+      - name: Create coverage
+        run: |
+          cd _builds
+          ./test_compression
+          cd ..
+          gcovr -r . --exclude _builds/ --exclude source/main.cpp --html --html-details -o my_coverage.html
+      - name: Code coverage report html
+        uses: actions/upload-artifact@v2
+        with:
+          name: codecov_report
+          path: my_coverage.html
